@@ -7,7 +7,7 @@ see [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 ----
 ## Content
 1. Ansible Master Server.
-2. And more to come: NGINX Web Servers & DB Servers Clusters for development environments.
+2. Work in progress: NGINX Web Servers & DB Servers Clusters for development environments. Not yet ready to use.
 
 ----
 ## Warning
