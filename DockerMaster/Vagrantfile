@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+  config.vm.box = "bento/ubuntu-18.04"
+  config.vm.box_version = "201910.20.0"
+  config.vm.box_check_update = true
+  config.vm.boot_timeout = 3600
+  config.vm.define "docker-master"
+  config.vm.hostname="docker-master.local"
+  config.ssh.username = 'vagrant'
+  config.ssh.password = 'vagrant'
+  config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
+  config.vm.provision "file", source: "./data_private/aws.pub", destination: "/home/vagrant/.ssh/aws.pub"
+  config.vm.provision "shell", inline: <<-SHELL
+  cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+  cat /home/vagrant/.ssh/aws.pub >> /home/vagrant/.ssh/authorized_keys
+  SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+  sudo apt-get update && apt-get upgrade -y && apt-get install docker.io -y
+  usermod -aG root vagrant
+  usermod -aG docker vagrant
+  SHELL
+
+  # Network customization to run on public and bridge networks
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
+  # Create a public network, which generally matched to bridged network.
+  # config.vm.network "public_network"
+  config.vm.network "public_network", ip: "192.168.1.254"
+
+  # Folders shares
+  config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+  config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+  # Provider configuration
+  config.vm.provider "virtualbox" do |vb|
+     vb.name = "docker-master"
+     vb.memory = "1024"
+     vb.cpus = 6
+     end
+  end
