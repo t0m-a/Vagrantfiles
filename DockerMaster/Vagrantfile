@@ -18,8 +18,11 @@ Vagrant.configure("2") do |config|
   SHELL
   config.vm.provision "shell", inline: <<-SHELL
   sudo apt-get update && apt-get upgrade -y && apt-get install docker.io -y
-  usermod -aG root vagrant
-  usermod -aG docker vagrant
+  curl --silent -L https://github.com/docker/compose/releases/download/1.25.0/docker-compose-`uname -s`-`uname -m` -o docker-compose
+  sudo chmod +x docker-compose
+  sudo mv docker-compose /usr/local/bin
+  sudo usermod -aG root vagrant
+  sudo usermod -aG docker vagrant
   SHELL
 
   # Network customization to run on public and bridge networks
