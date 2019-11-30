@@ -10,11 +10,18 @@ Vagrant.configure("2") do |config|
   config.vm.hostname="ansible-master"
   config.ssh.username = 'vagrant'
   config.ssh.password = 'vagrant'
+  config.ssh.insert_key = false
+  config.ssh.forward_agent = true
+  config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', './data_private/vagrant.pem']
+  config.vm.provision "file", source: "./data_private/insecure_private_key.pub", destination: "/home/vagrant/.ssh/authorized_keys"
   config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/id_rsa.pub"
-  config.vm.provision "file", source: "./data_private/aws.pub", destination: "/home/vagrant/.ssh/aws.pub"
+  config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+  config.vm.provision "shell", inline: <<-SHELL
+  sudo cp /home/vagrant/sshd_config /etc/ssh/ && chmod 761 /etc/ssh/sshd_config
+  sudo service sshd restart
+  SHELL
   config.vm.provision "shell", inline: <<-SHELL
   cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
-  cat /home/vagrant/.ssh/aws.pub >> /home/vagrant/.ssh/authorized_keys
   SHELL
 
   # Network customization to run on public and bridge networks
