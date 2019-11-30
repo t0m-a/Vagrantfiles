@@ -1,4 +1,4 @@
-# Ansible Master Server
+# Docker Master Server
 
 ----
 ## Vagrantfile for VirtualBox provisioning 
@@ -6,9 +6,9 @@ see [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 
 ----
 ## Content
-1. Ansible Master Server Vagrantfile.
-2. bootstrap.sh script.
-3. sshd_config.
+1. Docker Master Server Vagrantfile.
+2. ssh_config.
+
 ----
 ## Update
 Provioning uses SSH authentication with password. Once completed the Vagranfile configures the guest to only accept private keys files as declared and imported in the file itself. You can store your private keys where you want but I used a local folder in my Vagrant project folder ./data_private. Be sure to have an ssh-agent enabled, running and allowing forwarding. For instance in Linux shell, WSL, MobaXterm or Git Bash for Windows, you could run or add to your .profile file the following commands:
@@ -24,7 +24,7 @@ These files are created *only* for Development and Staging environments. **Do no
 The Vagrantfile will spin up a VirtualBox VM with: 
 
 
-     vb.name = "ansible-master"
+     vb.name = "docker-master"
      vb.memory = "1024"
      vb.cpus = 6 
 
@@ -37,13 +37,13 @@ Configure shared folders:
     "/home/vagrant/data_private", :mount_options => 
     ["dmode=775,fmode=764"]
 
-You will need to create data_private in your Vagrant Project folder to store the keys you will need to pass to your Ansible machine.
+You will need to create data_private in your Vagrant Project folder to store the keys you will need to pass to your Docker machine.
 
 Right now the Box used is:
 
     config.vm.box = "bento/ubuntu-18.04"
     config.vm.box_version = "201910.20.0"
 
-Bootstrap.sh will only update the system and install the Ansible repository and package + dependencies.
+The Vagrantfine will update the system and install Docker, docker-compose and docker-machine.
 
 ##### Happy #DevOps & #Coding to all !
