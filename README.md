@@ -3,7 +3,9 @@
 ----
 ## Vagrantfiles for VirtualBox provisioning 
 I'm migrating my VMs to Microsoft Hyper-V see:
+
 [Vagrant: Hyper-V](https://www.vagrantup.com/docs/hyperv/)
+
 For the Vobx_provider, see [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 
 ----
