@@ -64,5 +64,5 @@ Vagrant.configure("2") do |config|
      cpus = 6
      h.enable_virtualization_extensions = true
      h.linked_clone = true
-     end
-  end
+   end
+end

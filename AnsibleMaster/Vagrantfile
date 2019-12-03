@@ -53,10 +53,10 @@ Vagrant.configure("2") do |config|
 
   # Provider configuration
   config.vm.provider "hyperv" do |h|
-   vmname = "docker-master"
-   maxmemory = "1024"
-   cpus = 6
-   h.enable_virtualization_extensions = true
-   h.linked_clone = true
-   end
+    vmname = "docker-master"
+    maxmemory = "1024"
+    cpus = 6
+    h.enable_virtualization_extensions = true
+    h.linked_clone = true
+  end
 end

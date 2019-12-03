@@ -32,8 +32,8 @@ Vagrant.configure("2") do |config|
         cpus = 6
         h.enable_virtualization_extensions = true
         h.linked_clone = true
-       end
     end
+end
 
 # Load Balancer VM for the Cluster
 Vagrant.configure("2") do |config|
@@ -65,8 +65,8 @@ Vagrant.configure("2") do |config|
         cpus = 6
         h.enable_virtualization_extensions = true
         h.linked_clone = true
-        end
-     end
+    end
+end
 
 # Nginx Servers VMs for the Cluster
 # WEBSERVER1
@@ -99,8 +99,8 @@ Vagrant.configure("2") do |config|
         cpus = 6
         h.enable_virtualization_extensions = true
         h.linked_clone = true
-        end
-     end
+    end
+end
 
 # WEBSERVER2
 Vagrant.configure("2") do |config|
@@ -132,8 +132,8 @@ Vagrant.configure("2") do |config|
             cpus = 6
             h.enable_virtualization_extensions = true
             h.linked_clone = true
-            end
-         end
+        end
+end
 
 # MySQL Servers VMs for the Cluster Master (and Slave)
 # DB MASTER
@@ -165,8 +165,8 @@ Vagrant.configure("2") do |config|
         cpus = 6
         h.enable_virtualization_extensions = true
         h.linked_clone = true
-        end
-     end
+    end
+end
 # DB SLAVE
 Vagrant.configure("2") do |config|
         config.vm.box = "bento/ubuntu-18.04"
@@ -195,5 +195,5 @@ Vagrant.configure("2") do |config|
             cpus = 6
             h.enable_virtualization_extensions = true
             h.linked_clone = true
-            end
-         end
+        end
+end
