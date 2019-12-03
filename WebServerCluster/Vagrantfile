@@ -11,7 +11,7 @@ Vagrant.configure("2") do |config|
     config.ssh.username = 'vagrant'
     config.ssh.password = 'vagrant'
     config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
-    config.vm.provision "file", source: "./data_private/id_rsa", destination: "/home/vagrant/.ssh/id_rsa"
+    config.vm.provision "file", source: "./data_private/id_rsa.pem", destination: "/home/vagrant/.ssh/id_rsa.pem"
     config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
 
     config.vm.network "public_network"
@@ -19,9 +19,9 @@ Vagrant.configure("2") do |config|
 
     config.vm.synced_folder ".", "/home/vagrant/hostdata", {
         type: 'smb', mount_options: ['vers=3.0'],
-        smb_host: '192.168.1.3',
-        smb_username: Secret.client_id,
-        smb_password: Secret.api_key
+        smb_host: Secret.smb_host,
+        smb_username: Secret.smb_user,
+        smb_password: Secret.smd_pwd
         }
 
     config.vm.provision :shell, path: "bootstrap-ansible.sh"
@@ -54,9 +54,9 @@ Vagrant.configure("2") do |config|
 
     config.vm.synced_folder ".", "/home/vagrant/hostdata", {
         type: 'smb', mount_options: ['vers=3.0'],
-        smb_host: '192.168.1.3',
-        smb_username: Secret.client_id,
-        smb_password: Secret.api_key
+        smb_host: Secret.smb_host,
+        smb_username: Secret.smb_user,
+        smb_password: Secret.smd_pwd
         }
 
     config.vm.provider "hyperv" do |h|
@@ -69,5 +69,131 @@ Vagrant.configure("2") do |config|
      end
 
 # Nginx Servers VMs for the Cluster
+# WEBSERVER1
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "webserver1-cluster"
+    config.vm.hostname="webserver1-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network"
+    config.vm.network "forwarded_port", guest: 22, host: 2224
+    config.vm.network "forwarded_port", guest: 80, host: 8080
+    config.vm.network "forwarded_port", guest: 443, host: 4443
+
+    config.vm.synced_folder ".", "/home/vagrant/hostdata", {
+        type: 'smb', mount_options: ['vers=3.0'],
+        smb_host: Secret.smb_host,
+        smb_username: Secret.smb_user,
+        smb_password: Secret.smd_pwd
+        }
+
+    config.vm.provider "hyperv" do |h|
+        vmname = "webserver1-cluster"
+        maxmemory = "256"
+        cpus = 6
+        h.enable_virtualization_extensions = true
+        h.linked_clone = true
+        end
+     end
+
+# WEBSERVER2
+Vagrant.configure("2") do |config|
+        config.vm.box = "bento/ubuntu-18.04"
+        config.vm.box_check_update = true
+        config.vm.boot_timeout = 3600
+        config.vm.define "webserver2-cluster"
+        config.vm.hostname="webserver2-cluster"
+        config.ssh.username = 'vagrant'
+        config.ssh.password = 'vagrant'
+        config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+        config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+        config.vm.network "public_network"
+        config.vm.network "forwarded_port", guest: 22, host: 2225
+        config.vm.network "forwarded_port", guest: 80, host: 8081
+        config.vm.network "forwarded_port", guest: 443, host: 4444
+
+        config.vm.synced_folder ".", "/home/vagrant/hostdata", {
+            type: 'smb', mount_options: ['vers=3.0'],
+            smb_host: Secret.smb_host,
+            smb_username: Secret.smb_user,
+            smb_password: Secret.smd_pwd
+            }
+
+        config.vm.provider "hyperv" do |h|
+            vmname = "load-balancer-cluster"
+            maxmemory = "256"
+            cpus = 6
+            h.enable_virtualization_extensions = true
+            h.linked_clone = true
+            end
+         end
 
 # MySQL Servers VMs for the Cluster Master (and Slave)
+# DB MASTER
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "db-master-cluster"
+    config.vm.hostname="db-master-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network"
+    config.vm.network "forwarded_port", guest: 22, host: 2226
+    config.vm.network "forwarded_port", guest: 3306, host: 3306
+
+    config.vm.synced_folder ".", "/home/vagrant/hostdata", {
+        type: 'smb', mount_options: ['vers=3.0'],
+        smb_host: Secret.smb_host,
+        smb_username: Secret.smb_user,
+        smb_password: Secret.smd_pwd
+        }
+
+    config.vm.provider "hyperv" do |h|
+        vmname = "db-master-cluster"
+        maxmemory = "256"
+        cpus = 6
+        h.enable_virtualization_extensions = true
+        h.linked_clone = true
+        end
+     end
+# DB SLAVE
+Vagrant.configure("2") do |config|
+        config.vm.box = "bento/ubuntu-18.04"
+        config.vm.box_check_update = true
+        config.vm.boot_timeout = 3600
+        config.vm.define "db-slave-cluster"
+        config.vm.hostname="db-slave-cluster"
+        config.ssh.username = 'vagrant'
+        config.ssh.password = 'vagrant'
+        config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+        config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+        config.vm.network "public_network"
+        config.vm.network "forwarded_port", guest: 22, host: 2227
+        config.vm.network "forwarded_port", guest: 3307, host: 3307
+        config.vm.synced_folder ".", "/home/vagrant/hostdata", {
+            type: 'smb', mount_options: ['vers=3.0'],
+            smb_host: Secret.smb_host,
+            smb_username: Secret.smb_user,
+            smb_password: Secret.smd_pwd
+            }
+
+        config.vm.provider "hyperv" do |h|
+            vmname = "load-balancer-cluster"
+            maxmemory = "256"
+            cpus = 6
+            h.enable_virtualization_extensions = true
+            h.linked_clone = true
+            end
+         end
