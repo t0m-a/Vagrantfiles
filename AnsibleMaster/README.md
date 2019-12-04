@@ -1,7 +1,7 @@
 # Ansible Master Server
 
 ----
-## Vagrantfile for VirtualBox provisioning 
+## Vagrantfile for Hyper-V provisioning 
 see [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 
 ----
