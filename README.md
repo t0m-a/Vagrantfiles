@@ -1,10 +1,11 @@
 # Vagrantfiles
 
 ----
-## Vagrantfiles for VirtualBox provisioning 
-I'm migrating my VMs to Microsoft Hyper-V see: [Vagrant: Hyper-V](https://www.vagrantup.com/docs/hyperv/)
+## Vagrantfiles for Microsoft Hyper-V provisioning 
+For Microsoft Hyper-V provider, see: [Vagrant: Hyper-V](https://www.vagrantup.com/docs/hyperv/)
 
-For the Vobx_provider, see: [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
+## Vagrantfiles for VirtualBox provisioning
+For Oracle VirtualBox provider, see: [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 
 ----
 ## Content
@@ -19,3 +20,4 @@ Not yet ready to use.
 These files are created *only* for Development and Staging environments. **Do not use in Production**.
 
 ##### Happy #DevOps & #Coding to all !
+Work in progress: Adding Vagrantfiles for DigitalOcean, Amazon Web Service EC2 and Docker containers provisioning...
