@@ -1,7 +1,7 @@
 # Docker Master Server
 
 ----
-## Vagrantfile for VirutalBox provisioning 
+## Vagrantfile for VirtualBox provisioning 
 see [Vagrant: VirtualBox](https://www.vagrantup.com/docs/virtualbox/)
 
 ----
