@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
 
     config.vm.provider "hyperv" do |h|
         vmname = "jamstack-webserver"
-        maxmemory = "512"
+        maxmemory = "256"
         cpus = 6
         h.enable_virtualization_extensions = true
         h.linked_clone = true
