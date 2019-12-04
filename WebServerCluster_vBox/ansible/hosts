@@ -1,0 +1,12 @@
+# Ansible Inventory File for WebServers Cluster
+
+[loadbalancer]
+192.168.1.253
+
+[webservers]
+192.168.1.252
+192.168.1.251
+
+[dbservers]
+192.168.1.250
+192.168.1.249
