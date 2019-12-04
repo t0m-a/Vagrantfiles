@@ -1,0 +1,164 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Ansible Master Server VM for the Cluster
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "ansible-master-cluster"
+    config.vm.hostname="ansible-master-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./data_private/id_rsa.pem", destination: "/home/vagrant/.ssh/id_rsa.pem"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network", ip: "192.168.1.254"
+    config.vm.network "forwarded_port", guest: 22, host: 2222
+
+    config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+    config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+    config.vm.provision :shell, path: "bootstrap-ansible.sh"
+
+    config.vm.provider "virtualbox" do |vb|
+            vb.name = "ansible-master-cluster"
+            vb.memory = "512"
+            vb.cpus = 6
+    end
+end
+
+# Load Balancer VM for the Cluster
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "load-balancer-cluster"
+    config.vm.hostname="load-balancer-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network",  ip: "192.168.1.253"
+    config.vm.network "forwarded_port", guest: 22, host: 2223
+    config.vm.network "forwarded_port", guest: 80, host: 80
+    config.vm.network "forwarded_port", guest: 443, host: 443
+
+    config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+    config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+    config.vm.provider "virtualbox" do |vb|
+            vb.name = "load-balancer-cluster"
+            vb.memory = "512"
+            vb.cpus = 6
+    end
+end
+
+# Nginx Servers VMs for the Cluster
+# WEBSERVER1
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "webserver1-cluster"
+    config.vm.hostname="webserver1-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network",  ip: "192.168.1.252"
+    config.vm.network "forwarded_port", guest: 22, host: 2224
+    config.vm.network "forwarded_port", guest: 80, host: 8080
+    config.vm.network "forwarded_port", guest: 443, host: 4443
+
+    config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+    config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+    config.vm.provider "virtualbox" do |vb|
+            vb.name = "webserver1-cluster"
+            vb.memory = "512"
+            vb.cpus = 6
+    end
+end
+
+# WEBSERVER2
+Vagrant.configure("2") do |config|
+        config.vm.box = "bento/ubuntu-18.04"
+        config.vm.box_check_update = true
+        config.vm.boot_timeout = 3600
+        config.vm.define "webserver2-cluster"
+        config.vm.hostname="webserver2-cluster"
+        config.ssh.username = 'vagrant'
+        config.ssh.password = 'vagrant'
+        config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+        config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+        config.vm.network "public_network",  ip: "192.168.1.251"
+        config.vm.network "forwarded_port", guest: 22, host: 2225
+        config.vm.network "forwarded_port", guest: 80, host: 8081
+        config.vm.network "forwarded_port", guest: 443, host: 4444
+
+        config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+        config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+        config.vm.provider "virtualbox" do |vb|
+                vb.name = "webserver2-cluster"
+                vb.memory = "512"
+                vb.cpus = 6
+        end
+end
+
+# MySQL Servers VMs for the Cluster Master (and Slave)
+# DB MASTER
+Vagrant.configure("2") do |config|
+    config.vm.box = "bento/ubuntu-18.04"
+    config.vm.box_check_update = true
+    config.vm.boot_timeout = 3600
+    config.vm.define "db-master-cluster"
+    config.vm.hostname="db-master-cluster"
+    config.ssh.username = 'vagrant'
+    config.ssh.password = 'vagrant'
+    config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+    config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+    config.vm.network "public_network",  ip: "192.168.1.250"
+    config.vm.network "forwarded_port", guest: 22, host: 2226
+    config.vm.network "forwarded_port", guest: 3306, host: 3306
+
+    config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+    config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+    config.vm.provider "virtualbox" do |vb|
+            vb.name = "db-master-cluster"
+            vb.memory = "512"
+            vb.cpus = 6
+    end
+end
+# DB SLAVE
+Vagrant.configure("2") do |config|
+        config.vm.box = "bento/ubuntu-18.04"
+        config.vm.box_check_update = true
+        config.vm.boot_timeout = 3600
+        config.vm.define "db-slave-cluster"
+        config.vm.hostname="db-slave-cluster"
+        config.ssh.username = 'vagrant'
+        config.ssh.password = 'vagrant'
+        config.vm.provision "file", source: "./data_private/id_rsa.pub", destination: "/home/vagrant/.ssh/authorized_keys"
+        config.vm.provision "file", source: "./sshd_config", destination: "/home/vagrant/sshd_config"
+
+        config.vm.network "public_network",  ip: "192.168.1.249"
+        config.vm.network "forwarded_port", guest: 22, host: 2227
+        config.vm.network "forwarded_port", guest: 3307, host: 3307
+
+        config.vm.synced_folder ".", "/vagrant", :mount_options => ["dmode=775,fmode=764"]
+        config.vm.synced_folder "./data_private", "/home/vagrant/data_private", :mount_options => ["dmode=775,fmode=764"]
+
+        config.vm.provider "virtualbox" do |vb|
+            vb.name = "db-slave-cluster"
+            vb.memory = "512"
+            vb.cpus = 6
+        end
+end
