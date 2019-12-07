@@ -20,7 +20,7 @@ For Amazon AWS provider, see: [Vagrant: AWS (GitHub)](https://github.com/mitchel
 3. JAMstack is a work in progress. I will provide a VM to develop and test JAMstack built web apps and web sites.
 4. WebServerCluser is a work in progress: NGINX Web Servers & DB Servers Clusters for development environments.
 Not yet ready to use.
-5. Vagrantfiles to create droplets on DigitalOcean. One is a fully automated droplet creation, installation and configuration serving websites cloned from GitHub over HTTP/HTTPS.
+5. Vagrantfiles to create droplets on DigitalOcean. Contains a fully automated droplet creation, installation and configuration, to serve websites over HTTP/HTTPS. The HTTP and SSL configurations are all retrieved and automatically installed from a private GitHub repository, websites are cloned from a public GitHub repository.
 
 ----
 ## Warning
